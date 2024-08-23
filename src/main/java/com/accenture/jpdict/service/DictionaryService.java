@@ -19,8 +19,12 @@ public class DictionaryService {
 
     public Optional<QueryResult> query(String queryString) throws JsonProcessingException, ApiFetchException, WordExtractionException {
         String jsonData = apiClient.fetchData(queryString);
+
+        // Parse response
         QueryResult result = apiResponseHandler.parseResponse(jsonData, queryString);
-        if (result.isEmpty())  return Optional.empty();
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
         return Optional.of(result);
     }
 

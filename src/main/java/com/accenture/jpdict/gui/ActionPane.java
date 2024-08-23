@@ -54,7 +54,6 @@ public class ActionPane extends JPanel {
         add(this.closeTabButton, gbc);
     }
 
-    // Event handling
     public void searchQuery(ActionListener actionListener) {
         this.searchButton.addActionListener(actionListener);
     }

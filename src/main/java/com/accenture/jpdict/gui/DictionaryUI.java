@@ -8,18 +8,18 @@ import java.awt.*;
 
 public class DictionaryUI extends JFrame {
     private JLabel mainPanel;
+
     private SearchPane searchPane;
     private ActionPane actionPane;
     private ResultsPane resultsPane;
 
     public DictionaryUI() {
-        // TODO:  Create a main panel and set its layout manager
         super("EN-JP Dictionary");
         this.mainPanel = new JLabel();
+
         this.searchPane = new SearchPane();
         this.actionPane = new ActionPane();
         this.resultsPane = new ResultsPane();
-        this.resultsPane.createDefaultTab();
 
         // Initialize dictionary controller
         new DictionaryController(this.searchPane, this.actionPane, this.resultsPane);
@@ -55,18 +55,6 @@ public class DictionaryUI extends JFrame {
     }
 
     public void display() {
-        /*
-        TODO: Make UI look modern
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (UnsupportedLookAndFeelException ignored) {
-            Toolkit.getDefaultToolkit().beep();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            ex.printStackTrace();
-            return;
-        }
-         */
-
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(400, 250));

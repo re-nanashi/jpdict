@@ -14,7 +14,7 @@ public class ApiClient {
 
     public String fetchData(String query) throws ApiFetchException {
         try {
-            URL url = new URL(API_URL + "?keyword=" + query);
+            URL url = new URL(API_URL + "?keyword=" + transformQueryText(query));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -26,6 +26,10 @@ public class ApiClient {
         } catch (IOException e) {
             throw new ApiFetchException("Error occurred while fetching data from API", e);
         }
+    }
+
+    private String transformQueryText(String query) {
+        return query.replaceAll("\\s+", "%20");
     }
 
     private String extractResponse(InputStream inputStream) {

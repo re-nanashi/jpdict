@@ -16,17 +16,23 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 enum Status {
     SELECTED, DESELECTED, INDETERMINATE
 }
 
 public class ResultsPane extends JTabbedPane {
+    public ResultsPane() {
+        this.createDefaultTab();
+    }
+
     public void createDefaultTab() {
-        // resultsPane.addTab("Sample", resultsPane.createDefaultTab());
-        Object[][] sampleData = {{true, "Example", "実例", "じつれい", "jitsu rei", "sample, illustration, precedent"}, {true, "N/A", "N/A", "N/A", "N/A", "N/A"}};
-        this.addTab("Sample", new ResultPane(sampleData));
+        Object[][] sampleData = {
+                {true, "Welcome","ようこそ","ようこそ","youkoso","welcome"},
+                {true, "to", "戸", "と", "to", "door (esp. Japanese-style)"},
+                {true, "my","我が", "わが", "waga", "my,our,one's own"},
+                {true, "dictionary", "辞書", "じしょ", "jisho", "dictionary,lexicon"}};
+        this.addTab("ようこそ", new ResultPane(sampleData));
     }
 
     public void createTab(QueryResult queryResult) {
@@ -34,6 +40,7 @@ public class ResultsPane extends JTabbedPane {
         if (words.isEmpty()) {
             createDefaultTab();
         }
+
         int sizeOfResults = words.size();
         Object[][] rows = new Object[sizeOfResults][6];
         for (int i = 0; i < sizeOfResults; i++) {
@@ -42,7 +49,10 @@ public class ResultsPane extends JTabbedPane {
             rows[i] = rowData;
         }
 
-        if (this.getTitleAt(0).equals("Sample")) this.removeTabAt(0);
+        // Remove sample tab if displayed then continue to add the tabs to be displayed
+        if (this.getTabCount() > 0 && this.getTitleAt(0).equals("ようこそ")) {
+            this.removeTabAt(0);
+        }
         this.addTab(queryResult.getQueryString(), new ResultPane(rows));
     }
 
@@ -67,7 +77,6 @@ public class ResultsPane extends JTabbedPane {
 
         // Extract the JTable from the JScrollPane
         JTable table = (JTable) retrievedScrollPane.getViewport().getView();
-
         TableModel model = table.getModel();
         for (int row = 0; row < model.getRowCount(); row++) {
             Object firstColumn = model.getValueAt(row, 0);
@@ -83,7 +92,7 @@ public class ResultsPane extends JTabbedPane {
             results.add(String.format("%s;%s;%s;%s;%s", values[0], values[1], values[2], values[3], values[4]));
         }
 
-        // Copy to clipboard
+        // Copy selected results to clipboard
         String stringToCopy = String.join("\n", results);
         StringSelection stringSelection = new StringSelection(stringToCopy);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -97,7 +106,7 @@ class ResultPane extends JPanel {
     protected ResultPane(Object[][] data) {
         super(new BorderLayout()); // initialize using border layout
 
-        // Set table model using our default config
+        // Set table model using our custom config
         DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0) {
             final boolean[] canEdit = new boolean[]{true, false, false, false, false, false};
 
@@ -111,7 +120,7 @@ class ResultPane extends JPanel {
             }
         };
 
-        // insert row here: Object[]
+        // Insert rows here using this type: Object[]
         for (Object[] row : data) {
             model.addRow(row);
         }
@@ -163,8 +172,37 @@ class ResultPane extends JPanel {
             }
         };
 
+        // Custom cell renderer for japanese fonts
+        DefaultTableCellRenderer jpRenderer = new DefaultTableCellRenderer() {
+            final Font font = new Font("Meiryo", Font.PLAIN, 12);
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+                setFont(font);
+                return this;
+            }
+        };
+
+        // Set custom fonts on Japanese word columns
+        int KANJI_COLUMN_IDX = 2;
+        int KANA_COLUMN_IDX = 3;
+        queryResultTable.getColumnModel().getColumn(KANJI_COLUMN_IDX).setCellRenderer(jpRenderer);
+        queryResultTable.getColumnModel().getColumn(KANA_COLUMN_IDX).setCellRenderer(jpRenderer);
+
         queryResultTable.getTableHeader().setReorderingAllowed(false);
         queryResultTable.setFillsViewportHeight(true);
+
+        // Set row and column dimensions
+        queryResultTable.setRowHeight(20); // rows
+        // columns
+        final int FIRST_COLUMN = 0;
+        final int LAST_COLUMN = 5;
+        TableColumnModel columnModel = queryResultTable.getColumnModel();
+        columnModel.getColumn(FIRST_COLUMN).setMaxWidth(90);
+        columnModel.getColumn(FIRST_COLUMN).setPreferredWidth(90);
+        columnModel.getColumn(LAST_COLUMN).setPreferredWidth(400);
+
         add(new JScrollPane(queryResultTable));
     }
 }
@@ -196,18 +234,19 @@ class HeaderRenderer implements TableCellRenderer {
             checkbox.setSelected(true);
             checkbox.setEnabled(false);
         }
-
         checkbox.setOpaque(false);
         checkbox.setFont(table.getFont());
 
         TableCellRenderer renderer = table.getTableHeader().getDefaultRenderer();
         Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
         if (component instanceof JLabel) {
             JLabel jl = (JLabel) component;
             label.setIcon(new ComponentIcon(checkbox));
             jl.setIcon(new ComponentIcon(label));
             jl.setText(null);
         }
+
         return component;
     }
 }
@@ -229,6 +268,7 @@ class HeaderCheckBoxHandler extends MouseAdapter implements TableModelListener {
             TableColumn column = table.getColumnModel().getColumn(vci);
             Object status = column.getHeaderValue();
             TableModel model = table.getModel();
+
             if (model instanceof DefaultTableModel && checkRepaint((DefaultTableModel) model, column, status)) {
                 JTableHeader header = table.getTableHeader();
                 header.repaint(header.getHeaderRect(vci));
@@ -243,6 +283,7 @@ class HeaderCheckBoxHandler extends MouseAdapter implements TableModelListener {
                     .map(vector -> (Boolean) ((List<?>) vector).get(targetColumnIndex) )
                     .distinct()
                     .toList();
+
             boolean notDuplicates = items.size() == 1;
             if (notDuplicates) {
                 boolean isSelected = items.getFirst();
@@ -263,14 +304,18 @@ class HeaderCheckBoxHandler extends MouseAdapter implements TableModelListener {
         JTable table = header.getTable();
         TableColumnModel columnModel = table.getColumnModel();
         TableModel model = table.getModel();
+
         int vci = columnModel.getColumnIndexAtX(event.getX());
         int mci = table.convertColumnIndexToModel(vci);
+
         if (mci == targetColumnIndex && model.getRowCount() > 0) {
             TableColumn column = columnModel.getColumn(vci);
             boolean status = column.getHeaderValue() == Status.DESELECTED;
+
             for (int i = 0; i < model.getRowCount(); i++) {
                 model.setValueAt(status, i, mci);
             }
+
             column.setHeaderValue(status ? Status.SELECTED : Status.DESELECTED);
         }
     }

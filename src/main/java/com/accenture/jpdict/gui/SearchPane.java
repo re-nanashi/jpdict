@@ -2,6 +2,8 @@ package com.accenture.jpdict.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.border.Border;
 
 public class SearchPane extends JPanel {
@@ -30,7 +32,10 @@ public class SearchPane extends JPanel {
         add(this.searchField, gbc);
     }
 
-    // getter
+    public void searchQuery(ActionListener actionListener) {
+        this.searchField.addActionListener(actionListener);
+    }
+
     public String getQueryString() {
         return this.searchField.getText();
     }

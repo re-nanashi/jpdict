@@ -23,7 +23,7 @@ public class JpWord {
     }
 
     public String getReading() {
-        if (this.reading == null) return "N/A";
+        if (this.reading == null) return "該当なし";
         return this.reading;
     }
 

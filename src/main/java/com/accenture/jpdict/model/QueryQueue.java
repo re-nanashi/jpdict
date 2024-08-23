@@ -17,9 +17,15 @@ public class QueryQueue {
 
     // Returns true if the queue creation is successful
     // TODO:
-    //  I think this should throw an exception or it should let the user know that no results found for the specific word
-    //  or the word is already searched
+    //  I think this should throw an exception if word is already searched or the query string is empty it should let the user know that no results found for the specific word
     public boolean createQueue(String queryString, List<String> alreadyShown) throws InputException {
+        // if queryString is empty
+        if (queryString.isBlank()) {
+            return false;
+        }
+
+        //
+
         List<String> extractedKeywords = Stream.of(queryString.split(",", -1))
                 .map(String::trim)
                 .filter(keyword -> !alreadyShown.contains(keyword))
