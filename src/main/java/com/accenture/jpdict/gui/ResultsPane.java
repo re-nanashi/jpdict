@@ -240,11 +240,10 @@ class HeaderRenderer implements TableCellRenderer {
         TableCellRenderer renderer = table.getTableHeader().getDefaultRenderer();
         Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 
-        if (component instanceof JLabel) {
-            JLabel jl = (JLabel) component;
+        if (component instanceof JLabel jLabel) {
             label.setIcon(new ComponentIcon(checkbox));
-            jl.setIcon(new ComponentIcon(label));
-            jl.setText(null);
+            jLabel.setIcon(new ComponentIcon(label));
+            jLabel.setText(null);
         }
 
         return component;
