@@ -1,6 +1,6 @@
 package com.accenture.jpdict.exceptions;
 
-public class ApiFetchException extends RuntimeException {
+public class ApiFetchException extends Exception {
     public ApiFetchException(String message) {
         super(message);
     }

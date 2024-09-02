@@ -42,10 +42,15 @@ public class ApiResponseHandler {
 
         // Extract english definitions from the "senses" node
         Optional<JsonNode> enNode = Optional.ofNullable(currentNode.get("senses").get(0).get("english_definitions"));
+        if (enNode.isEmpty()) {
+            throw new WordExtractionException("Error extracting english definitions");
+        }
+
         List<String> englishDefinitions = new ArrayList<>();
-        enNode.ifPresentOrElse(node -> {
-            if (node.isArray()) node.forEach(definition -> englishDefinitions.add(definition.asText()));
-        }, () -> { throw new WordExtractionException("Error extracting english definitions"); });
+        JsonNode node = enNode.get();
+        if (node.isArray()) {
+            node.forEach(definition -> englishDefinitions.add(definition.asText()));
+        }
 
         // Insert other english definition of  the queried word
         word.setOtherDefs(String.join(",", englishDefinitions));

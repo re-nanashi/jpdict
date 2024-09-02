@@ -18,24 +18,17 @@ public class QueryQueue {
     // Returns true if the queue creation is successful
     // TODO:
     //  I think this should throw an exception if word is already searched or the query string is empty it should let the user know that no results found for the specific word
-    public boolean createQueue(String queryString, List<String> alreadyShown) throws InputException {
-        // if queryString is empty
-        if (queryString.isBlank()) {
+    public boolean createQueue(List<String> queryStrings) throws InputException {
+        // Return false if user input is empty
+        if (queryStrings.size() == 1 && queryStrings.getFirst().isBlank()) {
             return false;
         }
 
-        //
-
-        List<String> extractedKeywords = Stream.of(queryString.split(",", -1))
-                .map(String::trim)
-                .filter(keyword -> !alreadyShown.contains(keyword))
-                .toList();
-
-        if (extractedKeywords.stream().anyMatch(String::isEmpty)) {
-            throw new InputException("Error extracting keywords from the query");
+        if (queryStrings.stream().anyMatch(String::isEmpty)) {
+            throw new InputException("Error extracting keywords from the query. Wrong input syntax.");
         }
 
-        extractedKeywords.forEach(keyword -> {
+        queryStrings.forEach(keyword -> {
             Query query = new Query(keyword.trim());
             this.offer(query);
         });

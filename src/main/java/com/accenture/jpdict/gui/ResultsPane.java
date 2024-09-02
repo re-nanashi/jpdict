@@ -65,6 +65,16 @@ public class ResultsPane extends JTabbedPane {
         return null;
     }
 
+    public List<String> getAllTabTitles() {
+        List<String> tabTitles = new ArrayList<>();
+        int totalTabs = this.getTabCount();
+        for (int i = 0; i < totalTabs; i++) {
+            tabTitles.add(this.getTitleAt(i));
+        }
+
+        return tabTitles;
+    }
+
     public void copyResultsFromActiveTabToClipboard() {
         final int EXTRACTED_WORD_DETAIL_COUNT = 5;
 

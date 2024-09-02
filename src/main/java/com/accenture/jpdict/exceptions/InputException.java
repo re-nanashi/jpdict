@@ -1,6 +1,6 @@
 package com.accenture.jpdict.exceptions;
 
-public class InputException extends RuntimeException {
+public class InputException extends Exception {
     public InputException(String message) {
         super(message);
     }

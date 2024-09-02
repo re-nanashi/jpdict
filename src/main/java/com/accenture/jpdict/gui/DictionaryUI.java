@@ -22,7 +22,7 @@ public class DictionaryUI extends JFrame {
         this.resultsPane = new ResultsPane();
 
         // Initialize dictionary controller
-        new DictionaryController(this.searchPane, this.actionPane, this.resultsPane);
+        new DictionaryController(this);
 
         // Set main panel padding and layout
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -61,4 +61,22 @@ public class DictionaryUI extends JFrame {
         this.setSize(1280, 800);
         this.setVisible(true);
     }
+
+    // Getters
+    public JLabel getMainPanel() {
+        return this.mainPanel;
+    }
+
+    public SearchPane getSearchPane() {
+        return this.searchPane;
+    }
+
+    public ActionPane getActionPane() {
+        return this.actionPane;
+    }
+
+    public ResultsPane getResultsPane() {
+        return resultsPane;
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.accenture.jpdict.exceptions;
 
-public class WordExtractionException extends RuntimeException {
+public class WordExtractionException extends Exception {
     public WordExtractionException(String message) {
         super(message);
     }
