@@ -5,7 +5,6 @@ import com.accenture.jpdict.exceptions.InputException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Stream;
 
 public class QueryQueue {
     private final Queue<Query> queue;
@@ -15,15 +14,7 @@ public class QueryQueue {
         this.queue = new LinkedList<>();
     }
 
-    // Returns true if the queue creation is successful
-    // TODO:
-    //  I think this should throw an exception if word is already searched or the query string is empty it should let the user know that no results found for the specific word
-    public boolean createQueue(List<String> queryStrings) throws InputException {
-        // Return false if user input is empty
-        if (queryStrings.size() == 1 && queryStrings.getFirst().isBlank()) {
-            return false;
-        }
-
+    public void createQueue(List<String> queryStrings) throws InputException {
         if (queryStrings.stream().anyMatch(String::isEmpty)) {
             throw new InputException("Error extracting keywords from the query. Wrong input syntax.");
         }
@@ -32,8 +23,6 @@ public class QueryQueue {
             Query query = new Query(keyword.trim());
             this.offer(query);
         });
-
-        return true;
     }
 
     // Method to add an element to the queue

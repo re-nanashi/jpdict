@@ -3,6 +3,7 @@ package com.accenture.jpdict.service;
 import com.accenture.jpdict.api.ApiClient;
 import com.accenture.jpdict.api.ApiResponseHandler;
 import com.accenture.jpdict.exceptions.ApiFetchException;
+import com.accenture.jpdict.exceptions.InputException;
 import com.accenture.jpdict.exceptions.WordExtractionException;
 import com.accenture.jpdict.model.Query;
 import com.accenture.jpdict.model.QueryQueue;
@@ -28,8 +29,11 @@ public class DictionaryService {
         return Optional.of(result);
     }
 
-    public List<QueryResult> queryMultiple(QueryQueue queue) throws JsonProcessingException, ApiFetchException, WordExtractionException {
+    public List<QueryResult> queryMultiple(List<String> keywordsToQuery) throws JsonProcessingException, ApiFetchException, WordExtractionException, InputException {
         List<QueryResult> multipleQueryResults = new ArrayList<>();
+
+        QueryQueue queue = new QueryQueue();
+        queue.createQueue(keywordsToQuery);
 
         while(!queue.isEmpty()) {
             Query curr = queue.poll();
