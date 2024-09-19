@@ -62,11 +62,13 @@ public class ResultsPane extends JTabbedPane {
                 return (JScrollPane) component;
             }
         }
+
         return null;
     }
 
     public List<String> getAllTabTitles() {
         List<String> tabTitles = new ArrayList<>();
+
         int totalTabs = this.getTabCount();
         for (int i = 0; i < totalTabs; i++) {
             tabTitles.add(this.getTitleAt(i));
@@ -75,18 +77,30 @@ public class ResultsPane extends JTabbedPane {
         return tabTitles;
     }
 
-    public void copyResultsFromActiveTabToClipboard() {
+    public List<List<String>> getDataFromAllTables() {
+        List<List<String>> allTableData = new ArrayList<>();
+
+        int totalTabs = this.getTabCount();
+        for (int i = 0; i < totalTabs; i++) {
+            JPanel tabComponent = (JPanel) this.getTabComponentAt(i);
+            JScrollPane scrollPane = this.getScrollPaneFromPanel(tabComponent);
+            if (scrollPane == null) {
+                throw new RuntimeException("Error extracting scroll pane: JScrollPane not found");
+            }
+            JTable table = (JTable) scrollPane.getViewport().getView();
+            List<String> results = getDataFromTable(table);
+            allTableData.add(results);
+        }
+
+        return allTableData;
+    }
+
+    public List<String> getDataFromTable(JTable table) {
         final int EXTRACTED_WORD_DETAIL_COUNT = 5;
 
         List<String> results = new ArrayList<>();
 
-        JScrollPane retrievedScrollPane = getScrollPaneFromPanel((JPanel) this.getSelectedComponent());
-        if (retrievedScrollPane == null) {
-            throw new RuntimeException("JScrollPane not found");
-        }
-
         // Extract the JTable from the JScrollPane
-        JTable table = (JTable) retrievedScrollPane.getViewport().getView();
         TableModel model = table.getModel();
         for (int row = 0; row < model.getRowCount(); row++) {
             Object firstColumn = model.getValueAt(row, 0);
@@ -101,6 +115,18 @@ public class ResultsPane extends JTabbedPane {
 
             results.add(String.format("%s;%s;%s;%s;%s", values[0], values[1], values[2], values[3], values[4]));
         }
+
+        return results;
+    }
+
+    public void copyResultsFromActiveTabToClipboard() {
+        JScrollPane retrievedScrollPane = getScrollPaneFromPanel((JPanel) this.getSelectedComponent());
+        if (retrievedScrollPane == null) {
+            throw new RuntimeException("Error extracting scroll pane: JScrollPane not found");
+        }
+
+        JTable table = (JTable) retrievedScrollPane.getViewport().getView();
+        List<String> results = retrieveDataFromTable(table);
 
         // Copy selected results to clipboard
         String stringToCopy = String.join("\n", results);

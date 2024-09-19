@@ -12,10 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DictionaryController {
@@ -25,10 +23,6 @@ public class DictionaryController {
     private final SearchPane searchPane;
     private final ActionPane actionPane;
     private final ResultsPane resultsPane;
-
-    // TODO: The model should be only be interacted by a service
-    // Therefore we have to create multiple controllers instead of one
-    // and 1 service per controller
 
     public DictionaryController(DictionaryUI ui) {
         this.service = new DictionaryService();
@@ -56,10 +50,7 @@ public class DictionaryController {
                 searchPane.reset();
 
                 if (queryString.isEmpty()) {
-                    JOptionPane.showMessageDialog(mainPanel,
-                            "Empty user input. Search field cannot be empty.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(mainPanel, "Empty user input. Search field cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -67,29 +58,25 @@ public class DictionaryController {
                 List<String> queryStrings = Stream.of(queryString.split(",", -1)).map(String::trim).toList();
                 // Create a list of keyword strings to query. Remove already searched words from the list
                 List<String> currentTabTitles = resultsPane.getAllTabTitles();
-                List<String> newKeywordsToQuery = queryStrings.stream()
+                List<String> newKeywordsToQuery = queryStrings
+                        .stream()
                         .filter(keyword -> !currentTabTitles.contains(keyword))
                         .toList();
 
                 // Create a popup if there are already searched words
-                List<String> alreadySearchedWords = queryStrings.stream()
+                List<String> alreadySearchedWords = queryStrings
+                        .stream()
                         .filter(keyword -> !newKeywordsToQuery.contains(keyword))
                         .map(keyword -> String.format("* %s", keyword))
                         .toList();
                 if (!alreadySearchedWords.isEmpty()) {
                     String message = String.format("Word/s already queried. Skipping: \n%s", String.join("\n", alreadySearchedWords));
-                    JOptionPane.showMessageDialog(mainPanel,
-                            message,
-                            "Info",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(mainPanel, message, "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
 
                 // Display searching notification if there are new keywords to query
                 if (newKeywordsToQuery.isEmpty()) {
-                    JOptionPane.showMessageDialog(mainPanel,
-                            "No new words to query.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(mainPanel, "No new words to query.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -101,10 +88,7 @@ public class DictionaryController {
                         // Close the searching status popup
                         popup.dispose();
 
-                        JOptionPane.showMessageDialog(mainPanel,
-                                ex.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         return null;
                     }
                 });
@@ -119,10 +103,7 @@ public class DictionaryController {
                     }
 
                     if (data.isEmpty()) {
-                        JOptionPane.showMessageDialog(mainPanel,
-                                "No results found",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(mainPanel, "No results found", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
                         if (newKeywordsToQuery.size() != data.size()) {
                             List<String> keywordsWithResults = data
@@ -136,12 +117,8 @@ public class DictionaryController {
                                     .toList();
 
                             String errorMessage = String.format("No results found for the following: \n%s", String.join("\n", keywordsWithNoResults));
-                            JOptionPane.showMessageDialog(mainPanel,
-                                    errorMessage,
-                                    "Warning",
-                                    JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(mainPanel, errorMessage, "Warning", JOptionPane.WARNING_MESSAGE);
                         }
-
                         for (QueryResult result : data) {
                             resultsPane.createTab(result);
                         }
@@ -161,19 +138,15 @@ public class DictionaryController {
         this.searchPane.searchQuery(searchAction);
         this.actionPane.searchQuery(searchAction);
 
+        // Extract to file
+        this.actionPane.extractResultsToFile(_ -> {
+            List<List<String>> tabResults = this.resultsPane.getDataFromAllTables();
 
-        // Close the active tab
-        this.actionPane.closeActiveTab(e -> {
-            int indexToClose = this.resultsPane.getSelectedIndex();
-            this.resultsPane.removeTabAt(indexToClose);
 
-            if (this.resultsPane.getTabCount() == 0) {
-                this.resultsPane.createDefaultTab();
-            }
         });
 
         // Copy to clipboard
-        this.actionPane.copySelectedResultsToClipboard(e -> {
+        this.actionPane.copySelectedResultsToClipboard(_ -> {
             this.resultsPane.copyResultsFromActiveTabToClipboard();
 
             final int COPY_BUTTON_IDX = 1;
@@ -193,5 +166,21 @@ public class DictionaryController {
             timer.setRepeats(false);
             timer.start();
         });
+
+        this.actionPane.extractResultsToFile(_ -> {
+            List<List<String>> allTableData = this.resultsPane.getDataFromAllTables();
+            // Export to excel file
+        });
+
+        // Close the active tab
+        this.actionPane.closeActiveTab(_ -> {
+            int indexToClose = this.resultsPane.getSelectedIndex();
+            this.resultsPane.removeTabAt(indexToClose);
+
+            if (this.resultsPane.getTabCount() == 0) {
+                this.resultsPane.createDefaultTab();
+            }
+        });
+
     }
 }

@@ -37,6 +37,7 @@ public class DictionaryService {
 
         while(!queue.isEmpty()) {
             Query curr = queue.poll();
+            // TODO: Multithreading here
             Optional<QueryResult> result = this.query(curr.getQueryString());
             result.ifPresent(multipleQueryResults::add);
         }
