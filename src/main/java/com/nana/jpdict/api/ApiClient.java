@@ -1,6 +1,6 @@
-package com.accenture.jpdict.api;
+package com.nana.jpdict.api;
 
-import com.accenture.jpdict.exceptions.ApiFetchException;
+import com.nana.jpdict.exceptions.ApiFetchException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +22,7 @@ public class ApiClient {
             if (responseCode != HttpURLConnection.HTTP_OK) {
                 throw new ApiFetchException("Failed to fetch data from API. Response code: " + responseCode);
             }
+
             return extractResponse(connection.getInputStream());
         } catch (IOException e) {
             throw new ApiFetchException("Error occurred while fetching data from API", e);

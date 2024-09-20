@@ -1,7 +1,7 @@
-package com.accenture.jpdict.gui;
+package com.nana.jpdict.gui;
 
-import com.accenture.jpdict.model.JpWord;
-import com.accenture.jpdict.model.QueryResult;
+import com.nana.jpdict.model.JpWord;
+import com.nana.jpdict.model.QueryResult;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -82,7 +82,7 @@ public class ResultsPane extends JTabbedPane {
 
         int totalTabs = this.getTabCount();
         for (int i = 0; i < totalTabs; i++) {
-            JPanel tabComponent = (JPanel) this.getTabComponentAt(i);
+            JPanel tabComponent = (JPanel) this.getComponentAt(i);
             JScrollPane scrollPane = this.getScrollPaneFromPanel(tabComponent);
             if (scrollPane == null) {
                 throw new RuntimeException("Error extracting scroll pane: JScrollPane not found");
@@ -126,7 +126,7 @@ public class ResultsPane extends JTabbedPane {
         }
 
         JTable table = (JTable) retrievedScrollPane.getViewport().getView();
-        List<String> results = retrieveDataFromTable(table);
+        List<String> results = getDataFromTable(table);
 
         // Copy selected results to clipboard
         String stringToCopy = String.join("\n", results);

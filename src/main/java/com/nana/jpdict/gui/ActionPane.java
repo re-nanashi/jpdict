@@ -1,4 +1,4 @@
-package com.accenture.jpdict.gui;
+package com.nana.jpdict.gui;
 
 import javax.swing.*;
 import javax.swing.border.Border;

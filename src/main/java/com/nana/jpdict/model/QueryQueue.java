@@ -1,6 +1,6 @@
-package com.accenture.jpdict.model;
+package com.nana.jpdict.model;
 
-import com.accenture.jpdict.exceptions.InputException;
+import com.nana.jpdict.exceptions.InputException;
 
 import java.util.LinkedList;
 import java.util.List;

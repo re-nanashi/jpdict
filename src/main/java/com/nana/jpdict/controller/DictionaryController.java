@@ -1,12 +1,10 @@
-package com.accenture.jpdict.controller;
+package com.nana.jpdict.controller;
 
-import com.accenture.jpdict.exceptions.ApiFetchException;
-import com.accenture.jpdict.exceptions.InputException;
-import com.accenture.jpdict.exceptions.WordExtractionException;
-import com.accenture.jpdict.gui.*;
-import com.accenture.jpdict.model.QueryQueue;
-import com.accenture.jpdict.model.QueryResult;
-import com.accenture.jpdict.service.DictionaryService;
+import com.nana.jpdict.exceptions.*;
+import com.nana.jpdict.model.QueryResult;
+import com.nana.jpdict.service.DictionaryService;
+import com.nana.jpdict.gui.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.swing.*;
@@ -138,13 +136,6 @@ public class DictionaryController {
         this.searchPane.searchQuery(searchAction);
         this.actionPane.searchQuery(searchAction);
 
-        // Extract to file
-        this.actionPane.extractResultsToFile(_ -> {
-            List<List<String>> tabResults = this.resultsPane.getDataFromAllTables();
-
-
-        });
-
         // Copy to clipboard
         this.actionPane.copySelectedResultsToClipboard(_ -> {
             this.resultsPane.copyResultsFromActiveTabToClipboard();
@@ -167,11 +158,6 @@ public class DictionaryController {
             timer.start();
         });
 
-        this.actionPane.extractResultsToFile(_ -> {
-            List<List<String>> allTableData = this.resultsPane.getDataFromAllTables();
-            // Export to excel file
-        });
-
         // Close the active tab
         this.actionPane.closeActiveTab(_ -> {
             int indexToClose = this.resultsPane.getSelectedIndex();
@@ -181,6 +167,5 @@ public class DictionaryController {
                 this.resultsPane.createDefaultTab();
             }
         });
-
     }
 }

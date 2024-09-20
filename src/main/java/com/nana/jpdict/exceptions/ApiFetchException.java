@@ -1,4 +1,4 @@
-package com.accenture.jpdict.exceptions;
+package com.nana.jpdict.exceptions;
 
 public class ApiFetchException extends Exception {
     public ApiFetchException(String message) {

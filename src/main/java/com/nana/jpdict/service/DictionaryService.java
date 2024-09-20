@@ -1,13 +1,13 @@
-package com.accenture.jpdict.service;
+package com.nana.jpdict.service;
 
-import com.accenture.jpdict.api.ApiClient;
-import com.accenture.jpdict.api.ApiResponseHandler;
-import com.accenture.jpdict.exceptions.ApiFetchException;
-import com.accenture.jpdict.exceptions.InputException;
-import com.accenture.jpdict.exceptions.WordExtractionException;
-import com.accenture.jpdict.model.Query;
-import com.accenture.jpdict.model.QueryQueue;
-import com.accenture.jpdict.model.QueryResult;
+import com.nana.jpdict.api.ApiClient;
+import com.nana.jpdict.api.ApiResponseHandler;
+import com.nana.jpdict.exceptions.ApiFetchException;
+import com.nana.jpdict.exceptions.InputException;
+import com.nana.jpdict.exceptions.WordExtractionException;
+import com.nana.jpdict.model.Query;
+import com.nana.jpdict.model.QueryQueue;
+import com.nana.jpdict.model.QueryResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.ArrayList;

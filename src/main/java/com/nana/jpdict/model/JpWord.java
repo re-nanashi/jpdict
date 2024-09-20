@@ -1,4 +1,4 @@
-package com.accenture.jpdict.model;
+package com.nana.jpdict.model;
 
 import com.moji4j.MojiConverter;
 

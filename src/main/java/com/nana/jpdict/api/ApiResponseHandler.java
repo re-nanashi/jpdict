@@ -1,8 +1,8 @@
-package com.accenture.jpdict.api;
+package com.nana.jpdict.api;
 
-import com.accenture.jpdict.exceptions.WordExtractionException;
-import com.accenture.jpdict.model.JpWord;
-import com.accenture.jpdict.model.QueryResult;
+import com.nana.jpdict.exceptions.WordExtractionException;
+import com.nana.jpdict.model.JpWord;
+import com.nana.jpdict.model.QueryResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

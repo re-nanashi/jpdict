@@ -1,4 +1,4 @@
-package com.accenture.jpdict.model;
+package com.nana.jpdict.model;
 
 import java.util.ArrayList;
 import java.util.List;

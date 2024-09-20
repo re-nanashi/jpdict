@@ -1,6 +1,7 @@
-package com.accenture.jpdict.gui;
+package com.nana.jpdict.gui;
 
-import com.accenture.jpdict.controller.DictionaryController;
+import com.nana.jpdict.controller.DataExportController;
+import com.nana.jpdict.controller.DictionaryController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,14 +16,21 @@ public class DictionaryUI extends JFrame {
 
     public DictionaryUI() {
         super("EN-JP Dictionary");
-        this.mainPanel = new JLabel();
+        // Load icon image from resources
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/icon_titlebar.png"));
+        if (icon == null) {
+            System.err.println("Icon not found!");
+        }
+        this.setIconImage(icon.getImage());
 
+        this.mainPanel = new JLabel();
         this.searchPane = new SearchPane();
         this.actionPane = new ActionPane();
         this.resultsPane = new ResultsPane();
 
         // Initialize dictionary controller
         new DictionaryController(this);
+        new DataExportController(this);
 
         // Set main panel padding and layout
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);

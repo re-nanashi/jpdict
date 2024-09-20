@@ -1,6 +1,4 @@
-package com.accenture.jpdict.model;
-
-import java.util.Objects;
+package com.nana.jpdict.model;
 
 public class Query {
     private String queryString;

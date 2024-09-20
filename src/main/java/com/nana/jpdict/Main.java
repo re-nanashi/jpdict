@@ -1,6 +1,6 @@
-package com.accenture.jpdict;
+package com.nana.jpdict;
 
-import com.accenture.jpdict.gui.DictionaryUI;
+import com.nana.jpdict.gui.DictionaryUI;
 
 public class Main {
     public static void main(String[] args) {
